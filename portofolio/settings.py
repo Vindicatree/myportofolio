@@ -72,7 +72,6 @@ TEMPLATES = [
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-WSGI_APPLICATION = 'myportofolio.wsgi.application'
 
 
 # Database
