@@ -13,10 +13,14 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-# Load environment variables from .env file
-load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load local environment files when running outside the deployment platform.
+load_dotenv(BASE_DIR / '.env')
+if os.getenv('PRODUCTION', 'False').lower() == 'true':
+    load_dotenv(BASE_DIR / '.env.prod', override=False)
 
 
 # Quick-start development settings - unsuitable for production
