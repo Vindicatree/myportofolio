@@ -3,59 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orrick - Portfolio</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-            <a href="#profile" class="brand">Orrick</a>
-            <nav>
-                <a href="#profile">Profile</a>
-            </nav>
-        </div>
-    </header>
 
-    <main>
-        <section class="hero" id="profile">
-            <div class="container hero-grid">
-                <div class="hero-identity">
-                    <p class="hero-kicker">Computer Science &middot; Universitas Indonesia</p>
-                    <h1>Nathanael Orrick Hatmoko</h1>
-                </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/photo.png" alt="Photo of Orrick">
-                </div>
-                <div class="hero-details">
-                    <p class="bio">CS student at Universitas Indonesia for longer than planned, now a familiar (and slightly dreaded) face among Fasilkom students as a teaching assistant across several courses.</p>
-                    <dl class="meta-list">
-                        <div class="meta-row">
-                            <dt>NPM</dt>
-                            <dd>2506592125</dd>
-                        </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>S1 Ilmu Komputer</dd>
-                        </div>
-                    </dl>
-                    <div class="social-links">
-                        <a href="https://github.com/Vindicatree" class="social-link">GitHub</a>
-                        <a href="https://www.linkedin.com/in/nathanael-orrick-hatmoko-0a41b8305/" class="social-link">LinkedIn</a>
-                        <a href="mailto:orrickhatmoko@gmail.com" class="social-link">Email</a>
-                    </div>
-                </div>
+<div class="dark-section">
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container">
+      <nav class="nav-pill" aria-label="Primary">
+        <input class="nav-toggle" type="checkbox" id="nav-toggle" />
+        <label class="nav-toggle-label" for="nav-toggle" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+
+        <div class="nav-menu">
+          <ul class="nav-links">
+            <li><a href="#about">About me</a></li>
+            <li><a href="#education">education</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <form class="search-box" role="search" onsubmit="return false;">
+            <input type="text" placeholder="Search..." aria-label="Search" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </form>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+    <section class="hero container">
+        <div class="hero-text">
+            <h1 class="hero-name">Nathanael<br>Orrick<br>Hatmoko</h1>
+            <p class="hero-tagline">Welcome to my portfolio</p>
+        </div>
+
+        <!-- Photo -->
+        <div class="hero-photo-col">
+            <div class="photo-frame">
+                <div class="photo-glow" aria-hidden="true"></div>
+                <img class="hero-photo" src="../static/img/orrick.png" alt="Portrait of Nathanael Orrick Hatmoko">
+                <img class="sparkle sparkle--tl" src="../static/img/3%20ticks.png" alt="">
+                <img class="sparkle sparkle--tr" src="../static/img/2%20tick.png" alt="">
+                <img class="sparkle sparkle--bl" src="../static/img/2%20tick.png" alt="">
+                <img class="sparkle sparkle--br" src="../static/img/3%20ticks.png" alt="">
+
             </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 Burhan. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+            <p class="this-is-me">This is Me!!</p>
         </div>
-    </footer>
+  </section>
+
+  <!-- About + Interests -->
+  <section class="about-card container" id="about">
+    <h2 class="section-heading">About Me</h2>
+    <p class="about-text">
+      An active computer science student at Universitas Indonesia, thriving to learn and experiment more about AI and software. Dedicated to building practical solutions like student mobility apps and competing in high-intensity development hackathons, while balancing technical rigor.
+    </p>
+
+    <div class="button-row">
+      <a class="btn" href="#">GitHub</a>
+      <a class="btn" href="#">linkedin</a>
+      <a class="btn" href="mailto:orrickhatmoko@gmail.com">Email</a>
+    </div>
+
+    <h2 class="section-heading interests-heading">Interests</h2>
+
+    <div class="interests-grid">
+        <div class="skills">
+            <div class="skill">
+            <div class="skill-label">Html</div>
+            <div class="skill-bar">
+                <div class="skill-fill" style="--fill:60%"><span>60%</span></div>
+            </div>
+            </div>
+            <div class="skill">
+            <div class="skill-label">Css</div>
+            <div class="skill-bar">
+                <div class="skill-fill" style="--fill:40%"><span>40%</span></div>
+            </div>
+            </div>
+            <div class="skill">
+            <div class="skill-label">Javascript</div>
+            <div class="skill-bar">
+                <div class="skill-fill" style="--fill:15%"><span>15%</span></div>
+            </div>
+            </div>
+        </div>
+
+      <ul class="interest-list">
+        <li>Music</li>
+        <li>Videography</li>
+        <li>UI/UX</li>
+        <li>Gaming</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="education container" id="education">
+    <h2 class="section-heading education-heading">Education</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-school">Bunda Hati Kudus<br>Kota Wisata</div>
+        <div class="timeline-date">Elementary: 2013 &ndash; 2019; Junior High: 2019 &ndash; 2022</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-school">SMAK PENABUR<br>Kota Wisata</div>
+        <div class="timeline-date">Senior High: 2022 &ndash; 2025</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-school">Fasilkom<br>Universtias Indonesia</div>
+        <div class="timeline-date">College: 2025 &ndash; present</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="site-footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-left">
+        <div class="footer-block-title">Fakultas Ilmu Kompter</div>
+        <div class="footer-sub">Universitas Indonesia</div>
+        <p class="footer-address">Jl. Prof. DR. Sudjono D. Pusponegoro, Pondok Cina, Kecamatan Beji, Kota Depok, Jawa Barat 16425</p>
+      </div>
+
+      <div class="footer-contact">
+        <div class="footer-block-title">My Contact:</div>
+        <a class="contact-line" href="mailto:orrickhatmoko@gmail.com">
+          orrickhatmoko@gmail.com
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a class="contact-line" href="https://instagram.com/nath_.rick" target="_blank" rel="noopener">
+          @nath_.rick
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <p class="footer-copy">&copy;Nathanael Orrick Hatmoko, 2026</p>
+  </div>
+</footer>
+
 </body>
 </html>
