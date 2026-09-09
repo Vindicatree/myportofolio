@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nathanael Orrick Hatmoko - Portfolio</title>
+    <title>{{ name }} - Portfolio</title>
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,9 +27,10 @@
 
         <div class="nav-menu">
           <ul class="nav-links">
+            <li><a href="{% url 'main:show_main' %}">Home</a></li>
             <li><a href="#about">About me</a></li>
             <li><a href="#education">education</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="{% url 'main:show_experience' %}">Experience</a></li>
           </ul>
           <form class="search-box" role="search" onsubmit="return false;">
             <input type="text" placeholder="Search..." aria-label="Search" />
@@ -69,7 +70,7 @@
   <section class="about-card container" id="about">
     <h2 class="section-heading">About Me</h2>
     <p class="about-text">
-      An active computer science student at Universitas Indonesia, thriving to learn and experiment more about AI and software. Dedicated to building practical solutions like student mobility apps and competing in high-intensity development hackathons, while balancing technical rigor.
+      {{ bio }}
     </p>
 
     <div class="button-row">
@@ -163,7 +164,7 @@
       </div>
     </div>
 
-    <p class="footer-copy">&copy;Nathanael Orrick Hatmoko, 2026</p>
+    <p class="footer-copy">&copy;{{ name }}, 2026</p>
   </div>
 </footer>
 
