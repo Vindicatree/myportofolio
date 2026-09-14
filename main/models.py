@@ -49,3 +49,7 @@ class Achievements(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "Achievement"
+        verbose_name_plural = "Achievements"
