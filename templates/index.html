@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
 
 </head>
+<noscript>
+  <style>.reveal { opacity: 1 !important; transform: none !important; }</style>
+</noscript>
 <body>
 
 <div class="dark-section">
@@ -28,9 +31,8 @@
         <div class="nav-menu">
           <ul class="nav-links">
             <li><a href="{% url 'main:show_main' %}">Home</a></li>
-            <li><a href="#about">About me</a></li>
-            <li><a href="#education">education</a></li>
             <li><a href="{% url 'main:show_experience' %}">Experience</a></li>
+            <li><a href="{% url 'main:show_achievements' %}">Achievements</a></li>
           </ul>
           <form class="search-box" role="search" onsubmit="return false;">
             <input type="text" placeholder="Search..." aria-label="Search" />
@@ -68,20 +70,23 @@
 
   <!-- About + Interests -->
   <section class="about-card container" id="about">
-    <h2 class="section-heading">About Me</h2>
-    <p class="about-text">
-      {{ bio }}
-    </p>
+    <div class="reveal" data-reveal>
+      <h2 class="section-heading">About Me</h2>
+      <p class="about-text">
+        {{ bio }}
+      </p>
 
-    <div class="button-row">
-      <a class="btn" href="#">GitHub</a>
-      <a class="btn" href="#">linkedin</a>
-      <a class="btn" href="mailto:orrickhatmoko@gmail.com">Email</a>
+      <div class="button-row">
+        <a class="btn" href="#">GitHub</a>
+        <a class="btn" href="#">linkedin</a>
+        <a class="btn" href="mailto:orrickhatmoko@gmail.com">Email</a>
+      </div>
     </div>
 
-    <h2 class="section-heading interests-heading">Interests</h2>
+    <div class="reveal" data-reveal>
+      <h2 class="section-heading interests-heading">Interests</h2>
 
-    <div class="interests-grid">
+      <div class="interests-grid">
         <div class="skills">
             <div class="skill">
             <div class="skill-label">Html</div>
@@ -103,12 +108,60 @@
             </div>
         </div>
 
-      <ul class="interest-list">
-        <li>Music</li>
-        <li>Videography</li>
-        <li>UI/UX</li>
-        <li>Gaming</li>
-      </ul>
+      <div class="interest-cards">
+        <button class="flip-card" type="button" aria-pressed="false" aria-label="Music. Press to flip the card.">
+          <div class="flip-card-inner">
+            <div class="flip-card-face flip-card-front">
+              <span class="flip-card-icon" aria-hidden="true">🎵</span>
+              <span class="flip-card-title">Music</span>
+              <span class="flip-card-hint">tap to flip</span>
+            </div>
+            <div class="flip-card-face flip-card-back">
+              <p>Always got a playlist running in the background.</p>
+            </div>
+          </div>
+        </button>
+
+        <button class="flip-card" type="button" aria-pressed="false" aria-label="Videography. Press to flip the card.">
+          <div class="flip-card-inner">
+            <div class="flip-card-face flip-card-front">
+              <span class="flip-card-icon" aria-hidden="true">🎬</span>
+              <span class="flip-card-title">Videography</span>
+              <span class="flip-card-hint">tap to flip</span>
+            </div>
+            <div class="flip-card-face flip-card-back">
+              <p>Turning raw footage into something worth watching.</p>
+            </div>
+          </div>
+        </button>
+
+        <button class="flip-card" type="button" aria-pressed="false" aria-label="UI/UX. Press to flip the card.">
+          <div class="flip-card-inner">
+            <div class="flip-card-face flip-card-front">
+              <span class="flip-card-icon" aria-hidden="true">🎨</span>
+              <span class="flip-card-title">UI/UX</span>
+              <span class="flip-card-hint">tap to flip</span>
+            </div>
+            <div class="flip-card-face flip-card-back">
+              <p>Obsessed with interfaces that just feel right to use.</p>
+            </div>
+          </div>
+        </button>
+
+        <button class="flip-card" type="button" aria-pressed="false" aria-label="Gaming. Press to flip the card.">
+          <div class="flip-card-inner">
+            <div class="flip-card-face flip-card-front">
+              <span class="flip-card-icon" aria-hidden="true">🎮</span>
+              <span class="flip-card-title">Gaming</span>
+              <span class="flip-card-hint">tap to flip</span>
+            </div>
+            <div class="flip-card-face flip-card-back">
+              <p>Ask me what I've been playing lately, I've got opinions.</p>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
     </div>
   </section>
 
@@ -167,6 +220,56 @@
     <p class="footer-copy">&copy;{{ name }}, 2026</p>
   </div>
 </footer>
+
+<script>
+  // Interest cards: click/tap/keyboard to flip
+  document.querySelectorAll('.flip-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      var flipped = card.classList.toggle('is-flipped');
+      card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+    });
+  });
+
+  // Fade in the About Me and Interests groups as they scroll into view
+  var revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && revealEls.length) {
+    var revealObserver = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(function (el) { revealObserver.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  // Skill bars: fill in once the About card scrolls into view
+  var skillFills = document.querySelectorAll('.skill-fill');
+  skillFills.forEach(function (fill) {
+    fill.style.width = '0%';
+  });
+
+  if ('IntersectionObserver' in window && skillFills.length) {
+    var skillObserver = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var target = entry.target;
+          var value = getComputedStyle(target).getPropertyValue('--fill').trim() || '0%';
+          target.style.width = value;
+          obs.unobserve(target);
+        }
+      });
+    }, { threshold: 0.4 });
+    skillFills.forEach(function (fill) { skillObserver.observe(fill); });
+  } else {
+    skillFills.forEach(function (fill) {
+      fill.style.width = getComputedStyle(fill).getPropertyValue('--fill').trim() || '0%';
+    });
+  }
+</script>
 
 </body>
 </html>

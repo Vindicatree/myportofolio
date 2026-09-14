@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from main.models import Experience
+from main.models import Experience, Achievements
 
 
 def show_main(request):
@@ -9,8 +9,10 @@ def show_main(request):
         "npm": "2506592125",
         "study_program": "S1 Ilmu Komputer",
         "bio": (
-            "Mahasiswa Ilmu Komputer Universitas Indonesia yang tertarik "
-            "pada pengembangan perangkat lunak dan pendidikan."
+            "An active computer science student at Universitas Indonesia, thriving to learn and "
+            "experiment more about AI and software. Dedicated to building practical solutions "
+            "like student mobility apps and competing in high-intensity development hackathons, "
+            "while balancing technical rigor. "
         ),
     }
     return render(request, "index.html", context)
@@ -22,3 +24,10 @@ def show_experience(request):
         "experience_list": Experience.objects.all(),
     }
     return render(request, "experience.html", context)
+
+def show_achievements(request):
+    context = {
+        "name": "Nathanael Orrick Hatmoko",
+        "achievements_list": Achievements.objects.all(),
+    }
+    return render(request, "achievements.html", context)
