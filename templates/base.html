@@ -1,8 +1,45 @@
-{% extends 'base.html' %}
 {% load static %}
-{% block meta %} <title>{{name}} - Portfolio</title> {% endblock meta %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=glass-buttons">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
+    {% block meta %} {% endblock meta %}
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <nav class="nav-pill" aria-label="Primary">
+                <input class="nav-toggle" type="checkbox" id="nav-toggle" />
+                <label class="nav-toggle-label" for="nav-toggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+                </label>
 
-{% block content %}
+                <div class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="{% url 'main:show_main' %}">Home</a></li>
+                    <li><a href="{% url 'main:show_experience' %}">Experience</a></li>
+                    <li><a href="{% url 'main:show_achievements' %}">Achievements</a></li>
+                </ul>
+                <form class="search-box" role="search" onsubmit="return false;">
+                    <input type="text" placeholder="Search..." aria-label="Search" />
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+    {% block content %}
     <main>
   <!-- Hero -->
     <section class="hero container">
@@ -143,55 +180,40 @@
     </div>
   </section>
     </main>
+    {% endblock content %}
 
-<script>
-  // Interest cards: click/tap/keyboard to flip
-  document.querySelectorAll('.flip-card').forEach(function (card) {
-    card.addEventListener('click', function () {
-      var flipped = card.classList.toggle('is-flipped');
-      card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
-    });
-  });
+    <footer class="site-footer" id="contact">
+        <div class="container">
+            <div class="footer-grid">
+            <div class="footer-left">
+                <div class="footer-block-title">Fakultas Ilmu Kompter</div>
+                <div class="footer-sub">Universitas Indonesia</div>
+                <p class="footer-address">Jl. Prof. DR. Sudjono D. Pusponegoro, Pondok Cina, Kecamatan Beji, Kota Depok, Jawa Barat 16425</p>
+            </div>
 
-  // Fade in the About Me and Interests groups as they scroll into view
-  var revealEls = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window && revealEls.length) {
-    var revealObserver = new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealEls.forEach(function (el) { revealObserver.observe(el); });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
-  }
+            <div class="footer-contact">
+                <div class="footer-block-title">My Contact:</div>
+                <a class="contact-line" href="mailto:orrickhatmoko@gmail.com">
+                orrickhatmoko@gmail.com
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                </a>
+                <a class="contact-line" href="https://instagram.com/nath_.rick" target="_blank" rel="noopener">
+                @nath_.rick
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+                </svg>
+                </a>
+            </div>
+            </div>
 
-  // Skill bars: fill in once the About card scrolls into view
-  var skillFills = document.querySelectorAll('.skill-fill');
-  skillFills.forEach(function (fill) {
-    fill.style.width = '0%';
-  });
+            <p class="footer-copy">&copy;{{ name }}, 2026</p>
+        </div>
+    </footer>
 
-  if ('IntersectionObserver' in window && skillFills.length) {
-    var skillObserver = new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          var target = entry.target;
-          var value = getComputedStyle(target).getPropertyValue('--fill').trim() || '0%';
-          target.style.width = value;
-          obs.unobserve(target);
-        }
-      });
-    }, { threshold: 0.4 });
-    skillFills.forEach(function (fill) { skillObserver.observe(fill); });
-  } else {
-    skillFills.forEach(function (fill) {
-      fill.style.width = getComputedStyle(fill).getPropertyValue('--fill').trim() || '0%';
-    });
-  }
-</script>
-<script src="{% static 'js/page-transition.js' %}?v=page-fade" defer></script>
-{% endblock content %}
+</body>
+</html>
