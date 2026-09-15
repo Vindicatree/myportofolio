@@ -1,0 +1,50 @@
+[
+{
+  "model": "main.experience",
+  "pk": "329dc54e-b22d-4eab-889c-d1495b2d34bb",
+  "fields": {
+    "title": "BEM Fasilkom UI",
+    "description": "Staff BEM Fasilkom UI Departemen Seni Budaya",
+    "category": "full-time",
+    "thumbnail": null,
+    "started_at": "2026-09-09T09:29:31.862Z",
+    "ended_at": null
+  }
+},
+{
+  "model": "main.experience",
+  "pk": "561d27ca-6f67-41f7-85db-150b2ee0756c",
+  "fields": {
+    "title": "Open House Fasilkom UI",
+    "description": "Staff divisi Ambassador OH Fasilkom UI",
+    "category": "full-time",
+    "thumbnail": null,
+    "started_at": "2026-09-14T03:41:45.388Z",
+    "ended_at": "2025-11-01T06:00:00Z"
+  }
+},
+{
+  "model": "main.experience",
+  "pk": "65c2f65b-3ce7-4e5a-b222-cb2d9231e749",
+  "fields": {
+    "title": "COMPFEST 18",
+    "description": "Staff Event Divisi Playground compost 18",
+    "category": "full-time",
+    "thumbnail": null,
+    "started_at": "2026-09-14T03:39:54.776Z",
+    "ended_at": null
+  }
+},
+{
+  "model": "main.achievements",
+  "pk": "1d3dc7e5-4304-4c72-a03e-1470fc33531c",
+  "fields": {
+    "title": "Superstar Science Olympiad Cabang Kimia",
+    "description": "Juara Harpan II Olimpiade Sains tingkat SMA cabang Kimia",
+    "category": "other",
+    "issuer": "MAN 1 Batam",
+    "thumbnail": null,
+    "achieved_at": "2023-11-01"
+  }
+}
+]
