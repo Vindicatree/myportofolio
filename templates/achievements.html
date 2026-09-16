@@ -5,41 +5,50 @@
 {% endblock meta %}
 
 {% block content %}
-  <main>
-    <section class="experience-section container" id="achievements">
-      <p class="section-kicker">Things that I achieve</p>
-      <h1 class="section-heading experience-heading">Achievements</h1>
-
-      <div class="experience-grid">
-        {% for achievement in achievements_list %}
-          <article class="experience-card">
-            <div class="experience-content">
-              <span class="experience-category">
-                {{ achievement.get_category_display }}
-              </span>
-              <h2>{{ achievement.title }}</h2>
-              <p class="experience-description">
-                {{ achievement.description }}
-              </p>
+    <main>
+        <section class="experience-section container" id="achievements">
+            <p class="section-kicker">Things that I achieve</p>
+            <div class="project-header">
+                <h1 class="section-heading experience-heading">Achievements</h1>
+                <a href="{% url 'main:create_achievements' %}"
+                   class="button project-add-button">
+                    <span aria-hidden="true">+</span>
+                    Tambah Achievement
+                </a>
             </div>
 
-            <p class="experience-status">
-              {% if achievement.achieved_at %}
-                {{ achievement.achieved_at|date:"M Y" }}
-              {% elif achievement.issuer %}
-                {{ achievement.issuer }}
-              {% else %}
-                Achievement
-              {% endif %}
-            </p>
-          </article>
-        {% empty %}
-          <p class="empty-state">
-            Belum ada achievement yang ditambahkan.
-          </p>
-        {% endfor %}
-      </div>
-    </section>
-  </main>
+            <div class="experience-grid">
+                {% for achievement in achievements_list %}
+                    <article class="experience-card">
+                        <div class="experience-content">
+                            <span class="experience-category">
+                                {{ achievement.get_category_display }}
+                            </span>
+                            <h2>{{ achievement.title }}</h2>
+                            <p class="experience-description">
+                                {{ achievement.description }}
+                            </p>
+                        </div>
+
+                        <p class="experience-status">
+                            {% if achievement.achieved_at %}
+                                {{ achievement.achieved_at|date:"M Y" }}
+                            {% elif achievement.issuer %}
+                                {{ achievement.issuer }}
+                            {% else %}
+                                Achievement
+                            {% endif %}
+                        </p>
+
+                        {% include "components/achievements_delete_modal.html" with achievement=achievement %}
+                    </article>
+                {% empty %}
+                    <p class="empty-state">
+                        Belum ada achievement yang ditambahkan.
+                    </p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
     <script src="{% static 'js/page-transition.js' %}?v=page-fade" defer></script>
 {% endblock content %}

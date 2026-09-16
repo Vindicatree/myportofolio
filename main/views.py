@@ -30,9 +30,19 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 def show_achievements(request):
+    json_response = get_achievements_json(request)
+
+    achievements = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    achievements = [achievement.object for achievement in achievements]
+    title_query = request.GET.get("title", "").strip()
+
     context = {
-        "name": "Nathanael Orrick Hatmoko",
-        "achievements_list": Achievements.objects.all(),
+        "name": "Burhan",
+        "achievements_list": achievements,
+        "title_query": title_query,
     }
     return render(request, "achievements.html", context)
 
@@ -49,3 +59,23 @@ def create_achievements(request):
         "form": form,
     }
     return render(request, "achievements_form.html", context)
+
+def get_achievements_json(request):
+    title_query = request.GET.get("title", "").strip()
+    achievements = Achievements.objects.all()
+
+    if title_query:
+        achievements = achievements.filter(title__icontains=title_query)
+
+    achievements_json = serializers.serialize("json", achievements)
+    return HttpResponse(achievements_json, content_type="application/json")
+
+def delete_achievement(request, achievement_id):
+    achievement = get_object_or_404(Achievements, pk=achievement_id)
+
+    if request.method == "POST":
+        achievement.delete()
+        messages.success(request, "Achievement berhasil dihapus!")
+        return redirect("main:show_achievements")
+
+    return redirect("main:show_achievements")
