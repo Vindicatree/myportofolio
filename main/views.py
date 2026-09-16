@@ -40,7 +40,7 @@ def show_achievements(request):
     title_query = request.GET.get("title", "").strip()
 
     context = {
-        "name": "Burhan",
+        "name": "Orrick",
         "achievements_list": achievements,
         "title_query": title_query,
     }
@@ -51,7 +51,7 @@ def create_achievements(request):
 
     if request.method == "POST" and form.is_valid():
         form.save()
-        messages.success(request, "Proyek baru berhasil ditambahkan!")
+        messages.success(request, "Achievement baru berhasil ditambahkan!")
         return redirect("main:show_achievements")
 
     context = {

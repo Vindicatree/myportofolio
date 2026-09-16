@@ -14,8 +14,8 @@ class AchievementsForm(ModelForm):
         ]
 
         labels = {
-            "title": "Nama Proyek",
-            "description": "Deskripsi Proyek",
+            "title": "Nama penghargaan",
+            "description": "Deskripsi penghargaan",
             "category": "kategori penghargaan yang diperoleh",
             "issuer": "Pemberi penghargaan",
             "thumbnail": "URL Gambar penghargaan",

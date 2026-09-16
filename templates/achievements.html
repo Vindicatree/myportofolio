@@ -8,13 +8,24 @@
     <main>
         <section class="experience-section container" id="achievements">
             <p class="section-kicker">Things that I achieve</p>
-            <div class="project-header">
-                <h1 class="section-heading experience-heading">Achievements</h1>
-                <a href="{% url 'main:create_achievements' %}"
-                   class="button project-add-button">
+
+            <h1 class="section-heading experience-heading">Achievements</h1>
+
+            <div class="search-wrapper">
+                <a href="{% url 'main:create_achievements' %}" class="tambah-achievement-btn">
                     <span aria-hidden="true">+</span>
                     Tambah Achievement
                 </a>
+
+                <form method="get" action="{% url 'main:show_achievements' %}" class="project-search custom-search">
+                    <input type="search"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Cari berdasarkan nama proyek..."
+                           class="custom-search-input"
+                           aria-label="Cari berdasarkan nama proyek">
+                    <button type="submit" class="btn custom-search-btn">Cari</button>
+                </form>
             </div>
 
             <div class="experience-grid">
