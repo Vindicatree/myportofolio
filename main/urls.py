@@ -1,6 +1,6 @@
 from django.urls import path
 
-from main.views import show_main, show_experience, show_achievements
+from main.views import show_main, show_experience, show_achievements, create_achievements
 
 app_name = "main"
 
@@ -8,4 +8,5 @@ urlpatterns = [
     path("", show_main, name="show_main"),
     path("experience/", show_experience, name="show_experience"),
     path("achievements/", show_achievements, name="show_achievements"),
+    path("achievements/add/", create_achievements, name="create_achievements"),
 ]
