@@ -4,7 +4,7 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from main.models import Experience, Achievements
-from main.forms import AchievementsForm
+from main.forms import AchievementsForm, ExperienceForm
 
 
 def show_main(request):
@@ -23,11 +23,45 @@ def show_main(request):
 
 
 def show_experience(request):
+    json_response = get_experience_json(request)
+
+    experience = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    experience = [experience.object for experience in experience]
+    title_query = request.GET.get("title", "").strip()
+
     context = {
-        "name": "Nathanael Orrick Hatmoko",
-        "experience_list": Experience.objects.all(),
+        "name": "Orrick",
+        "achievements_list": experience,
+        "title_query": title_query,
     }
     return render(request, "experience.html", context)
+
+def create_experience(request):
+    form = ExperienceForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Experience baru berhasil ditambahkan!")
+        return redirect("main:show_experience")
+
+    context = {
+        "name": "Orrick",
+        "form": form,
+    }
+    return render(request, "experience_form.html", context)
+
+def get_experience_json(request):
+    title_query = request.GET.get("title", "").strip()
+    experience = Experience.objects.all()
+
+    if title_query:
+        experience = experience.filter(title__icontains=title_query)
+
+    experience_json = serializers.serialize("json", experience)
+    return HttpResponse(experience_json, content_type="application/json")
 
 def show_achievements(request):
     json_response = get_achievements_json(request)

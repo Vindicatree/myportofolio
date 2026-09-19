@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block meta %}
-    <title>Add Achievements - {{ name }}</title>
+    <title>Add Experience - {{ name }}</title>
 {% endblock meta %}
 
 {% block content %}
@@ -11,16 +11,16 @@
             <!-- Kolom Kiri: Informasi & Judul -->
             <div class="form-left-col">
                 <div>
-                    <h1 class="form-title">Add New Achievements</h1>
+                    <h1 class="form-title">Add New Experience</h1>
                     <p class="form-subtitle">
-                        Please fill this form to add more achievements to the page.
+                        Please fill this form to add more experience to the page.
                     </p>
                 </div>
             </div>
 
             <!-- Kolom Kanan -->
             <div class="form-right-card">
-                <form method="post" action="{% url 'main:create_achievements' %}" class="project-form">
+                <form method="post" action="{% url 'main:create_experience' %}" class="project-form">
                     {% csrf_token %}
                     {% for field in form %}
                         <div class="form-group">
@@ -40,7 +40,7 @@
                                 <polyline points="12 5 19 12 12 19"></polyline>
                             </svg>
                         </button>
-                        <a href="{% url 'main:show_achievements' %}" class="btn-cancel">Cancel</a>
+                        <a href="{% url 'main:show_experience' %}" class="btn-cancel">Cancel</a>
                     </div>
                 </form>
             </div>
