@@ -6,36 +6,59 @@
 
 {% block content %}
   <main>
-    <section class="experience-section container" id="experience">
-      <p class="section-kicker">Perjalanan saya sejauh ini</p>
-      <h1 class="section-heading experience-heading">Experience</h1>
+        <section class="experience-section container" id="achievements">
+            <p class="section-kicker">Things that I have done</p>
 
-      <div class="experience-grid">
-        {% for experience in experience_list %}
-          <article class="experience-card">
-            <div class="experience-content">
-              <span class="experience-category">
-                {{ experience.get_category_display }}
-              </span>
-              <h2>{{ experience.title }}</h2>
-              <p class="experience-description">
-                {{ experience.description }}
-              </p>
+            <h1 class="section-heading experience-heading">Experience</h1>
+
+            <div class="search-wrapper">
+                <a href="{% url 'main:create_experience' %}" class="tambah-achievement-btn">
+                    <span aria-hidden="true">+</span>
+                    Tambah Experience
+                </a>
+
+                <form method="get" action="{% url 'main:show_experience' %}" class="project-search custom-search">
+                    <input type="search"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Cari berdasarkan nama pengalaman..."
+                           class="custom-search-input"
+                           aria-label="Cari berdasarkan nama pengalaman">
+                    <button type="submit" class="btn custom-search-btn">Cari</button>
+                </form>
             </div>
 
-            {% if experience.is_ongoing %}
-              <p class="experience-status">Sedang berlangsung</p>
-            {% else %}
-              <p class="experience-status">Selesai</p>
-            {% endif %}
-          </article>
-        {% empty %}
-          <p class="empty-state">
-            Belum ada pengalaman yang ditambahkan.
-          </p>
-        {% endfor %}
-      </div>
-    </section>
+            <div class="experience-grid">
+                {% for experience in experience_list %}
+                    <article class="experience-card">
+                        <div class="experience-content">
+                            <span class="experience-category">
+                                {{ experience.get_category_display }}
+                            </span>
+                            <h2>{{ experience.title }}</h2>
+                            <p class="experience-description">
+                                {{ experience.description }}
+                            </p>
+                        </div>
+
+                        <p class="experience-status">
+                            {{ experience.started_at|date:"M Y" }} &ndash;
+                            {% if experience.is_ongoing %}
+                                Present
+                            {% else %}
+                                {{ experience.ended_at|date:"M Y" }}
+                            {% endif %}
+                        </p>
+
+                        {% include "components/experience_delete_modal.html" with experience=experience %}
+                    </article>
+                {% empty %}
+                    <p class="empty-state">
+                        Belum ada experience yang ditambahkan.
+                    </p>
+                {% endfor %}
+            </div>
+        </section>
   </main>
 <script src="{% static 'js/page-transition.js' %}?v=page-fade" defer></script>
 {% endblock content %}
