@@ -1863,3 +1863,47 @@ input {
     width: 100%;
   }
 }
+
+/* --- Django messages (toast) --- */
+.messages {
+    position: fixed;
+    top: 130px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(90%, 520px);
+    pointer-events: none;
+}
+
+.message {
+    padding: 12px 20px;
+    border-radius: 999px;
+    text-align: center;
+    font-family: var(--font-desc);
+    font-weight: 600;
+    color: #ffffff;
+    background: rgba(34, 197, 94, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    animation: message-fade 4s ease forwards;
+}
+
+.message.error {
+    background: rgba(220, 38, 38, 0.45);
+}
+
+@keyframes message-fade {
+    0%, 85% { opacity: 1; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+@media (max-width: 560px) {
+    .messages {
+        top: 170px;
+    }
+}

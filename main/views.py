@@ -34,7 +34,7 @@ def show_experience(request):
 
     context = {
         "name": "Orrick",
-        "achievements_list": experience,
+        "experience_list": experience,
         "title_query": title_query,
     }
     return render(request, "experience.html", context)
@@ -62,6 +62,16 @@ def get_experience_json(request):
 
     experience_json = serializers.serialize("json", experience)
     return HttpResponse(experience_json, content_type="application/json")
+
+def delete_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        experience.delete()
+        messages.success(request, "Experience berhasil dihapus!")
+        return redirect("main:show_experience")
+
+    return redirect("main:show_experience")
 
 def show_achievements(request):
     json_response = get_achievements_json(request)

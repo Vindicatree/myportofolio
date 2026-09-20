@@ -36,11 +36,6 @@ class ExperienceForm(ModelForm):
                     "rows": 3,
                 }
             ),
-            "category": TextInput(
-                attrs={
-                    "placeholder": "certification, competition, award, scholarship, publication, other",
-                }
-            ),
             "thumbnail": URLInput(
                 attrs={
                     "placeholder": "https://drive.google.com/thumbnail?id=...&sz=w1000",
@@ -86,11 +81,6 @@ class AchievementsForm(ModelForm):
                 attrs={
                     "placeholder": "Ceritakan penghargaanmu",
                     "rows": 3,
-                }
-            ),
-            "category": TextInput(
-                attrs={
-                    "placeholder": "certification, competition, award, scholarship, publication, other",
                 }
             ),
             "issuer": TextInput(
