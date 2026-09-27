@@ -11,11 +11,13 @@
 
             <h1 class="section-heading experience-heading">Achievements</h1>
 
+            {% if user.is_superuser %}
             <div class="search-wrapper">
                 <a href="{% url 'main:create_achievements' %}" class="tambah-achievement-btn">
                     <span aria-hidden="true">+</span>
                     Tambah Achievement
                 </a>
+            {% endif %}
 
                 <form method="get" action="{% url 'main:show_achievements' %}" class="project-search custom-search">
                     <input type="search"
@@ -51,7 +53,10 @@
                             {% endif %}
                         </p>
 
+                    {% if user.is_superuser %}
                         {% include "components/achievements_delete_modal.html" with achievement=achievement %}
+                    {% endif %}
+                    
                     </article>
                 {% empty %}
                     <p class="empty-state">
