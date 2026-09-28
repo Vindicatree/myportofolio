@@ -82,4 +82,4 @@ Proses pengerjaan tugas individu 3 menyerupai tutorial 3, sehingga pengunaan AI 
 
 
 ### Tugas 4 - AI Disclosure
-Pengerjaan tugas 4 saya menggunakan bantuan AI untuk memandu penambahan group editor dan penambahan user untuk group editor. Dengan menggunakan AI, prosedur pengerjaan saya menjadi lebih terstruktur dan jelas sehingga memperoleh hasil kode yang human readable.
+Pengerjaan tugas 4 saya menggunakan bantuan AI untuk memandu penambahan group editor dan penambahan user untuk group editor. Dengan menggunakan AI, prosedur pengerjaan saya menjadi lebih terstruktur dan jelas sehingga memperoleh hasil kode yang human readable. Selain itu, AI membantu saya dalam css untuk memperoleh UX yang lebih professional dan seamless.
