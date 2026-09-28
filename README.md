@@ -79,3 +79,7 @@ Proses pengerjaan tugas individu 3 menyerupai tutorial 3, sehingga pengunaan AI 
    5. Teks JSON dikirim lewat `HttpResponse` dengan `content_type="application/json"`, supaya penerimanya tahu bahwa isinya JSON.
 
    Serialization dibutuhkan karena data dari database masih berupa object Python (QuerySet berisi object model), sedangkan HTTP hanya bisa mengirim teks atau bytes. Object Python tidak bisa dikirim begitu saja lewat jaringan dan tidak dimengerti oleh client, apalagi kalau client-nya bukan Python. Serialization mengubah object itu menjadi format standar (JSON) yang bisa dikirim dan dibaca oleh siapa pun. Proses ini juga menangani tipe data yang tidak ada di JSON, seperti UUID dan tanggal, dengan mengubahnya menjadi teks.
+
+
+### Tugas 4 - AI Disclosure
+Pengerjaan tugas 4 saya menggunakan bantuan AI untuk memandu penambahan group editor dan penambahan user untuk group editor. Dengan menggunakan AI, prosedur pengerjaan saya menjadi lebih terstruktur dan jelas sehingga memperoleh hasil kode yang human readable. Selain itu, AI membantu saya dalam css untuk memperoleh UX yang lebih professional dan seamless.
