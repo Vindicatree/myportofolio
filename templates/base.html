@@ -27,21 +27,16 @@
                     <li><a href="{% url 'main:show_main' %}">Home</a></li>
                     <li><a href="{% url 'main:show_experience' %}">Experience</a></li>
                     <li><a href="{% url 'main:show_achievements' %}">Achievements</a></li>
+                </ul>
+                <div class="nav-actions">
                     {% if user.is_authenticated %}
                         <span class="nav-user">{{ user.username }}</span>
-                        <a href="{% url 'main:logout' %}">Logout</a>
+                        <a class="nav-action nav-action--ghost" href="{% url 'main:logout' %}">Logout</a>
                     {% else %}
-                        <a href="{% url 'main:login' %}">Login</a>
-                        <a href="{% url 'main:register' %}">Register</a>
+                        <a class="nav-action nav-action--ghost" href="{% url 'main:login' %}">Login</a>
+                        <a class="nav-action nav-action--solid" href="{% url 'main:register' %}">Register</a>
                     {% endif %}
-                </ul>
-                <form class="search-box" role="search" onsubmit="return false;">
-                    <input type="text" placeholder="Search..." aria-label="Search" />
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </form>
+                </div>
                 </div>
             </nav>
         </div>

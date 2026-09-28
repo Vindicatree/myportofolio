@@ -53,6 +53,7 @@
                             {% endif %}
                         </p>
 
+                        {% include "components/achievements_star.html" with achievement=achievement %}
                     {% if user.is_superuser %}
                         {% include "components/achievements_delete_modal.html" with achievement=achievement %}
                     {% endif %}

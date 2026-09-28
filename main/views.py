@@ -188,11 +188,21 @@ def toggle_star(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
-        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
-        # Kalau belum, tambahkan star.
         if request.user in experience.starred_by.all():
             experience.starred_by.remove(request.user)
         else:
             experience.starred_by.add(request.user)
 
     return redirect("main:show_experience")
+
+@login_required(login_url="/login/")
+def toggle_achievement_star(request, achievement_id):
+    achievement = get_object_or_404(Achievements, pk=achievement_id)
+
+    if request.method == "POST":
+        if request.user in achievement.starred_by.all():
+            achievement.starred_by.remove(request.user)
+        else:
+            achievement.starred_by.add(request.user)
+
+    return redirect("main:show_achievements")
