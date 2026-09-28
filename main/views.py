@@ -64,6 +64,28 @@ def create_experience(request):
     }
     return render(request, "experience_form.html", context)
 
+@login_required(login_url="/login/")
+def edit_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if not _can_edit_experience(request.user):
+        raise PermissionDenied
+
+    form = ExperienceForm(request.POST or None, instance=experience)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Experience berhasil diperbarui!")
+        return redirect("main:show_experience")
+
+    context = {
+        "name": "Orrick",
+        "form": form,
+        "is_edit": True,
+        "object_type": "Experience",
+    }
+    return render(request, "experience_form.html", context)
+
 def get_experience_json(request):
     title_query = request.GET.get("title", "").strip()
     experience = Experience.objects.all()
@@ -122,6 +144,30 @@ def create_achievements(request):
         "form": form,
     }
     return render(request, "achievements_form.html", context)
+
+@login_required(login_url="/login/")
+def edit_achievement(request, achievement_id):
+    achievement = get_object_or_404(Achievements, pk=achievement_id)
+
+    if not _can_edit_achievement(request.user):
+        raise PermissionDenied
+
+    form = AchievementsForm(request.POST or None, instance=achievement)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Achievement berhasil diperbarui!")
+        return redirect("main:show_achievements")
+
+    context = {
+        "name": "Orrick",
+        "form": form,
+        "is_edit": True,
+        "object_type": "Achievement",
+    }
+    return render(request, "achievements_form.html", context)
+
+
 
 def get_achievements_json(request):
     title_query = request.GET.get("title", "").strip()
@@ -206,3 +252,11 @@ def toggle_achievement_star(request, achievement_id):
             achievement.starred_by.add(request.user)
 
     return redirect("main:show_achievements")
+
+#EDITOR
+def _can_edit_experience(user):
+    return user.is_superuser or user.has_perm("main.change_experience")
+
+
+def _can_edit_achievement(user):
+    return user.is_superuser or user.has_perm("main.change_achievements")
