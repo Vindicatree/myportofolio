@@ -1,6 +1,7 @@
 from django.urls import path
 
-from main.views import show_main, show_experience, show_achievements, create_achievements, get_achievements_json, delete_achievement, create_experience, get_experience_json, delete_experience, register, login_user, logout_user, toggle_star, toggle_achievement_star
+from main.views import show_main, show_experience, show_achievements, create_achievements, get_achievements_json, delete_achievement, create_experience, get_experience_json, delete_experience, register, login_user, logout_user, toggle_star, toggle_achievement_star, edit_achievement, edit_experience
+
 
 app_name = "main"
 
@@ -19,4 +20,6 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
     path("experience/<uuid:experience_id>/star/", toggle_star, name="toggle_star"),
     path('achievements/<uuid:achievement_id>/star/', toggle_achievement_star, name='toggle_achievement_star'),
+    path("experience/<uuid:experience_id>/edit/",edit_experience,name="edit_experience"),
+    path("achievement/<uuid:achievement_id>/edit/",edit_achievement,name="edit_achievement"),
 ]
