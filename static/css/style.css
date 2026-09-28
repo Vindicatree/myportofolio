@@ -180,39 +180,61 @@ input {
   opacity: 1;
 }
 
-.search-box {
+/* Nav actions: Login / Register (or username / Logout) */
+.nav-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: var(--btn-bg);
-  border-radius: 999px;
-  padding: 12px 18px 12px 24px;
-  flex: 1 1 220px;
-  max-width: 420px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
-.search-box input {
-  border: none;
-  background: transparent;
-  flex: 1;
-  min-width: 0;
+.nav-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-display);
   font-size: 1rem;
-  color: #222;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 12px 26px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-.search-box input::placeholder {
-  color: #4a4a4a;
-  opacity: 0.8;
+.nav-action--ghost {
+  color: var(--white);
+  border-color: rgba(242, 242, 238, 0.5);
+  background: transparent;
 }
 
-.search-box input:focus {
-  outline: none;
+.nav-action--ghost:hover,
+.nav-action--ghost:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--white);
 }
 
-.search-box svg {
-  flex-shrink: 0;
-  color: #1a1a1a;
+.nav-action--solid {
+  color: var(--btn-text);
+  background: var(--btn-bg);
+}
+
+.nav-action--solid:hover,
+.nav-action--solid:focus-visible {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.nav-user {
+  max-width: 160px;
+  padding: 0 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  color: var(--white);
 }
 
 .hero {
@@ -908,10 +930,15 @@ input {
     padding: 11px 8px;
   }
 
-  .search-box {
+  .nav-actions {
     width: 100%;
+  }
+
+  .nav-actions .nav-action,
+  .nav-actions .nav-user {
+    flex: 1;
     max-width: none;
-    flex: none;
+    text-align: center;
   }
 
   .interests-grid {
@@ -995,11 +1022,6 @@ input {
     width: 100%;
     justify-content: center;
     gap: 22px;
-  }
-
-  .search-box {
-    width: 100%;
-    max-width: 100%;
   }
 
   .about-card {
@@ -1928,4 +1950,303 @@ input {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.25);
     font-size: 0.8rem;
+}
+
+
+/* ---- Login / Register ----
+   Styles the existing markup; the page opts in with .auth-section */
+.auth-section {
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.auth-section :focus-visible {
+  outline: 2px solid var(--bg-mid);
+  outline-offset: 3px;
+}
+
+/* The card */
+.auth-section .container {
+  position: relative;
+  max-width: 480px;
+  padding: clamp(28px, 5vw, 44px);
+  color: var(--dark-text);
+  background: var(--white);
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+/* Sparkles from the hero. They burst outward from two card corners
+   (top-right and bottom-left), like the hero sparkles do from the photo.
+   `scale` / `rotate` set the direction; the float animation only moves them. */
+.auth-section .container::before,
+.auth-section .container::after {
+  content: "";
+  position: absolute;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+}
+
+/* top-right: 3 ticks, mirrored so they point up and to the right */
+.auth-section .container::after {
+  left: calc(100% - 8px);
+  bottom: calc(100% - 8px);
+  width: 60px;
+  aspect-ratio: 178 / 134;
+  background-image: var(--tick3-img);
+  scale: -1 1;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* bottom-left: 2 ticks, turned around so they point down and to the left */
+.auth-section .container::before {
+  right: calc(100% - 8px);
+  top: calc(100% - 8px);
+  width: 50px;
+  aspect-ratio: 113 / 112;
+  background-image: var(--tick2-img);
+  rotate: 180deg;
+  animation: float 3s ease-in-out infinite;
+}
+
+.auth-section h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--dark-text);
+}
+
+/* Form */
+.auth-section .project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.auth-section .form-group {
+  margin-bottom: 0;
+}
+
+.auth-section .form-group label {
+  margin-bottom: 6px;
+  font-family: var(--font-desc);
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--dark-text);
+}
+
+.auth-section .form-group input {
+  padding: 13px 18px;
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  color: var(--dark-text);
+  background: #ebebeb;
+  border: 1.5px solid #dcdcd8;
+  border-radius: 16px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.auth-section .form-group input:focus {
+  background: #ffffff;
+  border-color: var(--bg-mid);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(48, 76, 70, 0.18);
+}
+
+.auth-section .form-help {
+  margin-top: 8px;
+  font-family: var(--font-desc);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #5f5f5f;
+}
+
+.auth-section .form-help ul {
+  padding-left: 1.2em;
+  list-style: disc;
+}
+
+.auth-section .form-help li + li {
+  margin-top: 2px;
+}
+
+/* Messages and errors */
+.auth-section .form-message {
+  margin-top: 14px;
+  padding: 10px 14px;
+  font-family: var(--font-desc);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--dark-text);
+  background: #e6ece8;
+  border-left: 4px solid var(--bg-mid);
+  border-radius: 10px;
+}
+
+.auth-section .form-error {
+  margin-top: 6px;
+  font-family: var(--font-desc);
+  font-size: 1rem;
+  line-height: 1.35;
+  color: #b42318;
+}
+
+.auth-section .form-group:has(.form-error) input {
+  background: #fdf3f2;
+  border-color: #b42318;
+}
+
+.auth-section .form-group:has(.form-error) input:focus {
+  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.16);
+}
+
+/* Errors that belong to the whole form (e.g. wrong password) */
+.auth-section .project-form > .form-error {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 1.05rem;
+  color: #7a271a;
+  background: #fdf3f2;
+  border: 1px solid #f0c4c0;
+  border-left: 4px solid #b42318;
+  border-radius: 12px;
+}
+
+/* Submit */
+.auth-section .button {
+  width: 100%;
+  margin-top: 6px;
+  padding: 14px 28px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: #233b35;
+  border-radius: 999px;
+  transition: background 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.auth-section .button:hover {
+  background: var(--bg-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.auth-section .button:active {
+  transform: none;
+}
+
+/* "Already have an account?" line */
+.auth-section .project-form + p {
+  margin-top: 22px;
+  padding-top: 18px;
+  text-align: center;
+  font-family: var(--font-desc);
+  font-size: 1.1rem;
+  color: #5f5f5f;
+  border-top: 1px solid #dcdcd8;
+}
+
+.auth-section .project-form + p a {
+  color: var(--bg-mid);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-section .project-form + p a:hover {
+  color: var(--bg-dark);
+}
+
+@media (max-width: 560px) {
+  .auth-section .container {
+    padding: 24px 20px 28px;
+    border-radius: 22px;
+  }
+
+  /* keep the sparkles inside the screen edges on phones */
+  .auth-section .container::after {
+    left: auto;
+    right: 10px;
+    bottom: calc(100% - 4px);
+    width: 48px;
+  }
+
+  .auth-section .container::before {
+    right: auto;
+    left: 10px;
+    top: calc(100% - 4px);
+    width: 40px;
+  }
+}
+
+
+/* Mobile: make the opened nav menu opaque so page content doesn't show through */
+@media (max-width: 900px) {
+  .nav-pill:has(.nav-toggle:checked) {
+    background: rgba(24, 39, 35, 0.95);
+  }
+}
+
+
+/* Space between the search bar and the first card (experience + achievements).
+   Covers the case where the search form is not wrapped in .search-wrapper. */
+.project-search + .experience-grid {
+  margin-top: 40px;
+}
+
+/* Star button on experience cards: glass pill, filled when starred */
+.experience-card .button-star {
+  gap: 0.5rem;
+  padding: 8px 8px 8px 16px;
+  font-family: var(--font-desc);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.experience-card .button-star:hover,
+.experience-card .button-star:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+.experience-card .button-star.is-starred {
+  color: var(--btn-text);
+  background: var(--btn-bg);
+  border-color: transparent;
+}
+
+.experience-card .button-star.is-starred:hover,
+.experience-card .button-star.is-starred:focus-visible {
+  background: #ffffff;
+}
+
+.experience-card .star-count {
+  min-width: 28px;
+  padding: 2px 8px;
+  text-align: center;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.experience-card .button-star.is-starred .star-count {
+  background: rgba(0, 0, 0, 0.1);
 }
