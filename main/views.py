@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from main.models import Experience, Achievements
 from main.forms import AchievementsForm, ExperienceForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied        
+from django.core.exceptions import PermissionDenied      
+from django.views.decorators.http import require_POST  
 import datetime
 
 
@@ -30,19 +31,13 @@ def show_main(request):
 
 
 def show_experience(request):
-    json_response = get_experience_json(request)
-
-    experience = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    experience = [experience.object for experience in experience]
     title_query = request.GET.get("title", "").strip()
 
     context = {
         "name": "Orrick",
-        "experience_list": experience,
         "title_query": title_query,
+        "form": ExperienceForm(),
+        "edit_form": ExperienceForm(auto_id="edit_%s"),
     }
     return render(request, "experience.html", context)
 
@@ -50,7 +45,7 @@ def show_experience(request):
 def create_experience(request):
     form = ExperienceForm(request.POST or None)
 
-    if not request.user.is_superuser:
+    if not request.user.has_perm("main.add_experience"):
         raise PermissionDenied
     
     if request.method == "POST" and form.is_valid():
@@ -88,21 +83,43 @@ def edit_experience(request, experience_id):
 
 def get_experience_json(request):
     title_query = request.GET.get("title", "").strip()
-    experience = Experience.objects.all()
+    experiences = Experience.objects.prefetch_related("starred_by")
 
     if title_query:
-        experience = experience.filter(title__icontains=title_query)
+        experiences = experiences.filter(title__icontains=title_query)
 
-    experience_json = serializers.serialize("json", experience, use_natural_foreign_keys=True)
-    return HttpResponse(experience_json, content_type="application/json")
+    # Konstruksi data JSON secara manual agar bisa menyisipkan logika Star
+    data = []
+    for experience in experiences:
+        starred_users = list(experience.starred_by.all())
+        is_starred = request.user.is_authenticated and request.user in starred_users
+        starred_by_names = ", ".join(u.username for u in starred_users)
+
+        data.append({
+            "pk": str(experience.id),
+            "fields": {
+                "title": experience.title,
+                "description": experience.description,
+                "category": experience.category,
+                "category_display": experience.get_category_display(),
+                "thumbnail": experience.thumbnail,
+                "started_at": experience.started_at.isoformat() if experience.started_at else None,
+                "ended_at": experience.ended_at.isoformat() if experience.ended_at else None,
+                "star_count": len(starred_users),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 @login_required(login_url="/login/")
 def delete_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
 
-    if not request.user.is_superuser:
+    if not request.user.has_perm("main.delete_experience"):
         raise PermissionDenied
-    
+
     if request.method == "POST":
         experience.delete()
         messages.success(request, "Experience berhasil dihapus!")
@@ -131,7 +148,7 @@ def show_achievements(request):
 def create_achievements(request):
     form = AchievementsForm(request.POST or None)
 
-    if not request.user.is_superuser:
+    if not request.user.has_perm("main.add_achievements"):
         raise PermissionDenied
 
     if request.method == "POST" and form.is_valid():
@@ -167,8 +184,6 @@ def edit_achievement(request, achievement_id):
     }
     return render(request, "achievements_form.html", context)
 
-
-
 def get_achievements_json(request):
     title_query = request.GET.get("title", "").strip()
     achievements = Achievements.objects.all()
@@ -183,7 +198,7 @@ def get_achievements_json(request):
 def delete_achievement(request, achievement_id):
     achievement = get_object_or_404(Achievements, pk=achievement_id)
 
-    if not request.user.is_superuser:
+    if not request.user.has_perm("main.delete_achievements"):
         raise PermissionDenied
 
     if request.method == "POST":
@@ -260,3 +275,41 @@ def _can_edit_experience(user):
 
 def _can_edit_achievement(user):
     return user.is_superuser or user.has_perm("main.change_achievements")
+
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.has_perm("main.add_experience"):
+        return JsonResponse(
+            {"message": "Kamu tidak punya izin untuk menambahkan experience."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Experience berhasil ditambahkan.", "pk": str(experience.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+
+@require_POST
+def edit_experience_ajax(request, experience_id):
+    if not request.user.has_perm("main.change_experience"):
+        return JsonResponse(
+            {"message": "Kamu tidak punya izin untuk mengedit experience."},
+            status=403,
+        )
+
+    experience = get_object_or_404(Experience, pk=experience_id)
+    form = ExperienceForm(request.POST, instance=experience)
+    if form.is_valid():
+        form.save()
+        return JsonResponse(
+            {"message": "Experience berhasil diperbarui.", "pk": str(experience.id)}
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

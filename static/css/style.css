@@ -2250,3 +2250,432 @@ input {
 .experience-card .button-star.is-starred .star-count {
   background: rgba(0, 0, 0, 0.1);
 }
+
+/* toast */
+.toast-component {
+    position: fixed;
+    inset: auto 2rem 2rem auto;
+    margin: 0;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 25px rgba(28, 25, 23, 0.15);
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    color: inherit;
+}
+
+.toast-component:popover-open {
+    display: flex;
+}
+
+.toast-hidden {
+    opacity: 0;
+    transform: translateY(150%);
+    pointer-events: none;
+}
+
+.toast-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+}
+
+.toast-message {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Modifikasi border kiri berdasarkan tipe notifikasi */
+.toast-success { border-left: 4px solid #22c55e; }
+.toast-error { border-left: 4px solid #b42318; }
+.toast-normal { border-left: 4px solid var(--accent); }
+
+.project-form-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-form-modal:popover-open {
+    display: flex;
+}
+
+.project-form-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: rgba(28, 25, 23, 0.58);
+    cursor: default;
+}
+
+.project-form-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 640px);
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
+}
+
+.project-form-modal__content h2 {
+    margin: 0 2.5rem 1.25rem 0;
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-size: 1.5rem;
+}
+
+.project-form-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.project-form-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .project-form-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .project-form-modal__content {
+        width: 100%;
+        max-height: 90vh;
+        padding: 1.25rem;
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .project-form-modal__actions {
+        flex-direction: column-reverse;
+    }
+
+    .project-form-modal__actions .button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* =========================================================
+   FIX: halaman Experience (search bar, teks hitam, modal form)
+   ========================================================= */
+
+/* Variabel ini dipakai di style.css (.button, .toast-component,
+   .project-form-modal__content, dll.) tapi tidak pernah didefinisikan,
+   sehingga background jadi transparan dan teks jatuh ke hitam. */
+:root {
+  --accent: #f2f2ee;
+  --ink: #233b35;
+  --line: rgba(26, 26, 26, 0.18);
+  --paper: #f2f2ee;
+  --text-muted: #6a6a6a;
+}
+
+.button-secondary {
+  color: var(--white);
+}
+
+/* Tombol "Tambah Experience" memakai gaya tautan yang sama dengan halaman
+   Achievements, tapi elemennya <button>, jadi styling bawaannya di-reset. */
+button.tambah-achievement-btn {
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+/* Toast memakai --paper yang terang, jadi teksnya harus gelap */
+.toast-component {
+  color: var(--dark-text);
+}
+
+/* ----- Modal tambah experience: mengikuti gaya kartu form (.form-main-card) ----- */
+/* Popover punya warna teks bawaan browser (hitam); set eksplisit */
+.project-form-modal {
+  color: var(--dark-text);
+}
+
+.project-form-modal__backdrop {
+  background: rgba(10, 20, 16, 0.6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.project-form-modal__content {
+  width: min(100%, 560px);
+  padding: clamp(24px, 4vw, 40px);
+  background: var(--white);
+  border: 0;
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.project-form-modal__content h2 {
+  margin: 0 3rem 1.25rem 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--dark-text);
+}
+
+.project-form-modal__close {
+  top: 1.25rem;
+  right: 1.5rem;
+  color: var(--dark-text);
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.project-form-modal__close:hover,
+.project-form-modal__close:focus-visible {
+  opacity: 1;
+}
+
+.project-form-modal .project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 0;
+}
+
+.project-form-modal .form-group {
+  margin-bottom: 0;
+}
+
+.project-form-modal .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--dark-text);
+}
+
+.project-form-modal .form-group input,
+.project-form-modal .form-group select,
+.project-form-modal .form-group textarea {
+  width: 100%;
+  padding: 12px 18px;
+  background: #ebebeb;
+  border: 1px solid #dcdcd8;
+  border-radius: 20px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  font-family: var(--font-hand);
+  font-size: 1.05rem;
+  color: var(--dark-text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.project-form-modal .form-group textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.project-form-modal .form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 40px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%231A1A1A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 12px 8px;
+}
+
+.project-form-modal .form-group input:focus,
+.project-form-modal .form-group select:focus,
+.project-form-modal .form-group textarea:focus {
+  background-color: #f7f7f5;
+  border-color: var(--bg-mid);
+  box-shadow: 0 0 0 3px rgba(48, 76, 70, 0.15);
+}
+
+.project-form-modal__actions {
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .project-form-modal__content {
+    border-radius: 28px 28px 0 0;
+  }
+
+  .project-form-modal__actions .btn-submit,
+  .project-form-modal__actions .btn-cancel {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE: halaman Experience
+   ========================================================= */
+
+/* Padding bawah 60px di .experience-card hanya dibutuhkan halaman Achievements
+   (tombol hapus absolut). Kartu di .project-grid memakai tombol biasa. */
+.project-grid .experience-card {
+  padding-bottom: clamp(22px, 3.5vw, 34px) !important;
+}
+
+/* Label tanggal rata kiri (kartu di .project-grid berupa kolom) */
+.project-grid .experience-status {
+  align-self: flex-start;
+  margin-left: 0;
+}
+
+/* Teks panjang tidak boleh memotong kartu */
+.project-grid .experience-card h2,
+.project-grid .experience-description {
+  overflow-wrap: anywhere;
+}
+
+/* Tablet & HP: satu kolom */
+@media (max-width: 720px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* HP */
+@media (max-width: 600px) {
+  .search-wrapper {
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .search-wrapper > .btn {
+    width: 100%;
+  }
+
+  /* Search bar tetap satu baris: input di kiri, tombol Cari di kanan */
+  .project-search.custom-search {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 6px 6px 18px;
+  }
+
+  .custom-search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 1rem;
+    text-overflow: ellipsis;
+  }
+
+  .custom-search-input::placeholder {
+    text-overflow: ellipsis;
+  }
+
+  .project-search.custom-search .custom-search-btn {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 10px 22px;
+  }
+
+  /* Kartu */
+  .project-grid .experience-card {
+    padding: 20px;
+    padding-bottom: 22px !important;
+  }
+
+  .project-actions {
+    gap: 10px 12px;
+  }
+
+  /* Modal (bottom sheet): hormati tinggi layar & safe area iPhone */
+  .project-form-modal__content {
+    max-height: 90dvh;
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+
+/* =========================================================
+   Edit achievement: tombol di kiri-bawah kartu
+   (tombol hapus ada di kanan-bawah)
+   ========================================================= */
+.achievement-edit-btn {
+  position: absolute;
+  bottom: 20px;
+  left: clamp(22px, 3.5vw, 34px);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: var(--font-desc);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.achievement-edit-btn:hover,
+.achievement-edit-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 560px) {
+  .achievement-edit-btn {
+    bottom: 16px;
+    left: 16px;
+    padding: 6px 12px;
+    font-size: 0.82rem;
+  }
+}
