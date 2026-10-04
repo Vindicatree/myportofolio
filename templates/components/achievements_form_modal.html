@@ -3,7 +3,7 @@
      popover="auto"
      role="dialog"
      aria-modal="true"
-     aria-labelledby="add-experience-modal-title">
+     aria-labelledby="add-achievement-modal-title">
     <button type="button"
             class="project-form-modal__backdrop"
             popovertarget="add-achievement-modal"
@@ -17,8 +17,8 @@
                 popovertargetaction="hide"
                 aria-label="Tutup form tambah achievement">×</button>
 
-        <h2 id="add-experience-modal-title">Tambah Achievement Baru</h2>
-        <form id="experience-form"
+        <h2 id="add-achievement-modal-title">Tambah Achievement Baru</h2>
+        <form id="achievement-form"
               method="post"
               action="{% url 'main:create_achievements' %}"
               class="project-form">
