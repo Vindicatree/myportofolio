@@ -183,7 +183,7 @@ def get_achievements_json(request):
     achievements = Achievements.objects.prefetch_related('starred_by').all()
 
     if title_query:
-        achievements = Achievements.filter(title__icontains=title_query)
+        achievements = Achievements.objects.filter(title__icontains=title_query)
 
     # Konstruksi data JSON secara manual agar bisa menyisipkan logika Star
     data = []
@@ -344,6 +344,24 @@ def create_achievement_ajax(request):
         return JsonResponse(
             {"message": "Proyek berhasil ditambahkan.", "pk": str(achievement.id)},
             status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def edit_achievement_ajax(request, achievement_id):
+    if not _can_edit_achievement(request.user):
+        return JsonResponse(
+            {"message": "Kamu tidak punya izin untuk mengedit achievement."},
+            status=403,
+        )
+
+    achievement = get_object_or_404(Achievements, pk=achievement_id)
+    form = AchievementsForm(request.POST, instance=achievement)
+    if form.is_valid():
+        form.save()
+        return JsonResponse(
+            {"message": "Achievement berhasil diperbarui.", "pk": str(achievement.id)}
         )
 
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

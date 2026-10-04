@@ -1,40 +1,28 @@
-<button type="button"
-        class="achievement-edit-btn"
-        popovertarget="edit-achievement-{{ achievement.id }}"
-        aria-label="Edit {{ achievement.title }}"
-        title="Edit achievement">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 20h9"></path>
-        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-    </svg>
-    Edit
-</button>
-
-<div id="edit-achievement-{{ achievement.id }}"
+<div id="edit-achievement-modal"
      class="project-form-modal"
      popover="auto"
      role="dialog"
      aria-modal="true"
-     aria-labelledby="edit-achievement-title-{{ achievement.id }}">
+     aria-labelledby="edit-achievement-modal-title">
     <button type="button"
             class="project-form-modal__backdrop"
-            popovertarget="edit-achievement-{{ achievement.id }}"
+            popovertarget="edit-achievement-modal"
             popovertargetaction="hide"
             aria-label="Tutup form edit achievement"></button>
 
     <div class="project-form-modal__content">
         <button type="button"
                 class="project-form-modal__close"
-                popovertarget="edit-achievement-{{ achievement.id }}"
+                popovertarget="edit-achievement-modal"
                 popovertargetaction="hide"
                 aria-label="Tutup form edit achievement">×</button>
 
-        <h2 id="edit-achievement-title-{{ achievement.id }}">Edit Achievement</h2>
-        <form method="post"
-              action="{% url 'main:edit_achievement' achievement.id %}"
+        <h2 id="edit-achievement-modal-title">Edit Achievement</h2>
+        <form id="achievement-edit-form"
+              method="post"
               class="project-form">
             {% csrf_token %}
-            {% for field in achievement.edit_form %}
+            {% for field in edit_form %}
                 <div class="form-group">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
@@ -46,7 +34,7 @@
             <div class="project-form-modal__actions">
                 <button type="button"
                         class="btn-cancel"
-                        popovertarget="edit-achievement-{{ achievement.id }}"
+                        popovertarget="edit-achievement-modal"
                         popovertargetaction="hide">Batal</button>
                 <button type="submit" class="btn-submit">Simpan Perubahan</button>
             </div>
