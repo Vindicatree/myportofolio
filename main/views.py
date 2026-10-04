@@ -128,19 +128,13 @@ def delete_experience(request, experience_id):
     return redirect("main:show_experience")
 
 def show_achievements(request):
-    json_response = get_achievements_json(request)
-
-    achievements = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    achievements = [achievement.object for achievement in achievements]
     title_query = request.GET.get("title", "").strip()
 
     context = {
         "name": "Orrick",
-        "achievements_list": achievements,
         "title_query": title_query,
+        "form": AchievementsForm(),
+        "edit_form": AchievementsForm(auto_id="edit_%s"),
     }
     return render(request, "achievements.html", context)
 
@@ -186,13 +180,35 @@ def edit_achievement(request, achievement_id):
 
 def get_achievements_json(request):
     title_query = request.GET.get("title", "").strip()
-    achievements = Achievements.objects.all()
+    achievements = Achievements.objects.prefetch_related('starred_by').all()
 
     if title_query:
-        achievements = achievements.filter(title__icontains=title_query)
+        achievements = Achievements.filter(title__icontains=title_query)
 
-    achievements_json = serializers.serialize("json", achievements)
-    return HttpResponse(achievements_json, content_type="application/json")
+    # Konstruksi data JSON secara manual agar bisa menyisipkan logika Star
+    data = []
+    for achievement in achievements:
+        starred_users = achievement.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(achievement.id),
+            "fields": {
+                "title": achievement.title,
+                "description": achievement.description,
+                "category": achievement.category,
+                "category_display": achievement.get_category_display(),
+                "issuer": achievement.issuer,
+                "thumbnail": achievement.thumbnail,
+                "achieved_at": achievement.achieved_at.isoformat() if achievement.achieved_at else None,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 @login_required(login_url="/login/")
 def delete_achievement(request, achievement_id):
@@ -310,6 +326,24 @@ def edit_experience_ajax(request, experience_id):
         form.save()
         return JsonResponse(
             {"message": "Experience berhasil diperbarui.", "pk": str(experience.id)}
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def create_achievement_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan proyek."},
+            status=403,
+        )
+
+    form = AchievementsForm(request.POST)
+    if form.is_valid():
+        achievement = form.save()
+        return JsonResponse(
+            {"message": "Proyek berhasil ditambahkan.", "pk": str(achievement.id)},
+            status=201,
         )
 
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
