@@ -30,6 +30,23 @@ class ExperienceSerializer(serializers.ModelSerializer):
     def validate_tech_stack(self, value):
         return strip_tags(value)
 
+    def update(self, instance, validated_data):
+        many_to_many = {}
+        for field in instance._meta.many_to_many:
+            if field.name in validated_data:
+                many_to_many[field.name] = validated_data.pop(field.name)
+
+        for field_name, value in validated_data.items():
+            setattr(instance, field_name, value)
+
+        if validated_data:
+            instance.save(update_fields=list(validated_data))
+
+        for field_name, value in many_to_many.items():
+            getattr(instance, field_name).set(value)
+
+        return instance
+
     def get_star_count(self, obj):
         return obj.starred_by.count()
 

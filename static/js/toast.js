@@ -5,7 +5,10 @@ function showToast(title, message, type = 'normal', duration = 3000) {
   const toastTitle = document.getElementById('toast-title');
   const toastMessage = document.getElementById('toast-message');
 
-  if (!toastComponent) return;
+  if (!toastComponent || !toastTitle || !toastMessage) {
+      console.warn('Toast component is missing from this page.');
+      return;
+  }
 
   // Hapus class tipe sebelumnya
   toastComponent.classList.remove('toast-success', 'toast-error', 'toast-normal');
@@ -26,11 +29,9 @@ function showToast(title, message, type = 'normal', duration = 3000) {
   // Batalkan timer sebelumnya jika toast masih tampil
   clearTimeout(toastTimer);
 
-  // Animasi muncul
-  if (!toastComponent.matches(':popover-open')) {
-      toastComponent.showPopover();
-      void toastComponent.offsetHeight; // paksa browser menghitung style agar transisi berjalan
-  }
+  // Tampilkan sebagai elemen fixed biasa agar tidak bergantung pada Popover API.
+  toastComponent.style.display = 'flex';
+  void toastComponent.offsetHeight; // paksa browser menghitung style agar transisi berjalan
   toastComponent.classList.remove('toast-hidden');
   toastComponent.classList.add('toast-show');
 
@@ -38,6 +39,8 @@ function showToast(title, message, type = 'normal', duration = 3000) {
   toastTimer = setTimeout(() => {
       toastComponent.classList.remove('toast-show');
       toastComponent.classList.add('toast-hidden');
-      toastTimer = setTimeout(() => toastComponent.hidePopover(), 300);
+      toastTimer = setTimeout(() => {
+          toastComponent.style.display = 'none';
+      }, 300);
   }, duration);
 }

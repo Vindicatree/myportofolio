@@ -51,10 +51,6 @@
                 <!-- Project Grid -->
                 <div id="grid" class="experience-grid project-grid hide"></div>
 
-            {% comment %}
-            Versi lama (server-side rendering), disimpan sebagai referensi.
-            Hapus blok ini kalau grid sudah sepenuhnya diisi lewat AJAX.
-
             <div class="experience-grid">
                 {% for achievement in achievements_list %}
                     <article class="experience-card">
@@ -102,7 +98,6 @@
                     </p>
                 {% endfor %}
             </div>
-            {% endcomment %}
         </section>
     </main>
     {% if user.is_superuser %}

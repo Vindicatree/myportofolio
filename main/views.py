@@ -32,10 +32,15 @@ def show_main(request):
 
 def show_experience(request):
     title_query = request.GET.get("title", "").strip()
+    experiences = Experience.objects.prefetch_related("starred_by").order_by("title", "id")
+    if title_query:
+        experiences = experiences.filter(title__icontains=title_query)
 
     context = {
         "name": "Orrick",
         "title_query": title_query,
+        "experience_list": experiences,
+        "can_edit_experience": _can_edit_experience(request.user),
         "form": ExperienceForm(),
         "edit_form": ExperienceForm(auto_id="edit_%s"),
     }
@@ -45,7 +50,7 @@ def show_experience(request):
 def create_experience(request):
     form = ExperienceForm(request.POST or None)
 
-    if not request.user.has_perm("main.add_experience"):
+    if not request.user.is_superuser:
         raise PermissionDenied
     
     if request.method == "POST" and form.is_valid():
@@ -129,10 +134,14 @@ def delete_experience(request, experience_id):
 
 def show_achievements(request):
     title_query = request.GET.get("title", "").strip()
+    achievements = Achievements.objects.prefetch_related("starred_by").order_by("title", "id")
+    if title_query:
+        achievements = achievements.filter(title__icontains=title_query)
 
     context = {
         "name": "Orrick",
         "title_query": title_query,
+        "achievements_list": achievements,
         "form": AchievementsForm(),
         "edit_form": AchievementsForm(auto_id="edit_%s"),
     }
@@ -286,7 +295,11 @@ def toggle_achievement_star(request, achievement_id):
 
 #EDITOR
 def _can_edit_experience(user):
-    return user.is_superuser or user.has_perm("main.change_experience")
+    return (
+        user.is_superuser
+        or user.has_perm("main.change_experience")
+        or user.groups.filter(name="Editor").exists()
+    )
 
 
 def _can_edit_achievement(user):
@@ -295,9 +308,9 @@ def _can_edit_achievement(user):
 
 @require_POST
 def create_experience_ajax(request):
-    if not request.user.has_perm("main.add_experience"):
+    if not request.user.is_superuser:
         return JsonResponse(
-            {"message": "Kamu tidak punya izin untuk menambahkan experience."},
+            {"message": "Hanya superuser yang dapat menambahkan experience."},
             status=403,
         )
 
@@ -314,7 +327,7 @@ def create_experience_ajax(request):
 
 @require_POST
 def edit_experience_ajax(request, experience_id):
-    if not request.user.has_perm("main.change_experience"):
+    if not _can_edit_experience(request.user):
         return JsonResponse(
             {"message": "Kamu tidak punya izin untuk mengedit experience."},
             status=403,
