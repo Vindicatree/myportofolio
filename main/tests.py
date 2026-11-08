@@ -74,10 +74,9 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "achievements.html")
-        self.assertContains(response, self.achievement.title)
-        self.assertContains(response, self.achievement.description)
-        self.assertContains(response, "Competition")
-        self.assertContains(response, self.achievement.issuer)
+        self.assertContains(response, 'id="achievement-search-form"')
+        self.assertContains(response, 'id="grid"')
+        self.assertContains(response, 'api/v1/achievements/')
 
     def test_admin_can_add_achievement(self):
         self.client.force_login(self.admin_user)

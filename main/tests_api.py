@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
-from main.models import Experience
+from main.models import Achievements, Experience
 
 
 class ExperienceAPITest(APITestCase):
@@ -164,3 +164,85 @@ class ExperienceAPITest(APITestCase):
             self.list_url, self.payload, format="json", HTTP_X_CSRFTOKEN=token,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+class AchievementsAPITest(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_superuser(
+            username="achievement-owner", password="test-password",
+            email="achievement-owner@example.com",
+        )
+        self.visitor = User.objects.create_user(
+            username="achievement-visitor", password="test-password",
+        )
+        self.achievement = Achievements.objects.create(
+            title="Science Award", description="Chemistry olympiad award",
+            category="award", issuer="School",
+        )
+        self.list_url = reverse("api:achievement-list")
+        self.detail_url = reverse("api:achievement-detail", args=[self.achievement.id])
+        self.star_url = reverse("api:achievement-star", args=[self.achievement.id])
+        self.payload = {
+            "title": "Portfolio Recognition",
+            "description": "Recognition for my portfolio",
+            "category": "award",
+            "issuer": "Portfolio Review",
+            "thumbnail": None,
+        }
+
+    def test_public_list_detail_and_search(self):
+        response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["id"], str(self.achievement.id))
+        self.assertNotIn("fields", response.data[0])
+        self.assertEqual(self.client.get(self.detail_url).status_code, status.HTTP_200_OK)
+        self.assertEqual(len(self.client.get(self.list_url, {"title": "science"}).data), 1)
+        self.assertEqual(self.client.get(self.list_url, {"title": "missing"}).data, [])
+
+    def test_owner_can_create_and_validation_errors_return_400(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post(self.list_url, self.payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["title"], self.payload["title"])
+        self.assertEqual(response.data["description"], self.payload["description"])
+
+        invalid = self.client.post(
+            self.list_url, {**self.payload, "title": " "}, format="json",
+        )
+        self.assertEqual(invalid.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("title", invalid.data)
+
+    def test_editor_can_patch_and_star_requires_login(self):
+        editor_group, _ = Group.objects.get_or_create(name="Editor")
+        self.visitor.groups.add(editor_group)
+        self.client.force_authenticate(user=self.visitor)
+        response = self.client.patch(
+            self.detail_url, {"title": "Updated Science Award"}, format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["title"], "Updated Science Award")
+
+        self.client.force_authenticate(user=None)
+        self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_403_FORBIDDEN)
+        self.client.force_authenticate(user=self.visitor)
+        response = self.client.post(self.star_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data["is_starred"])
+        self.assertEqual(response.data["star_count"], 1)
+        response = self.client.post(self.star_url)
+        self.assertFalse(response.data["is_starred"])
+        self.assertEqual(response.data["star_count"], 0)
+
+    def test_owner_delete_returns_204_and_guest_cannot_write(self):
+        self.client.force_authenticate(user=self.visitor)
+        self.assertEqual(
+            self.client.post(self.list_url, self.payload, format="json").status_code,
+            status.HTTP_403_FORBIDDEN,
+        )
+        self.assertEqual(self.client.delete(self.detail_url).status_code, status.HTTP_403_FORBIDDEN)
+
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.content, b"")
+        self.assertFalse(Achievements.objects.filter(pk=self.achievement.pk).exists())

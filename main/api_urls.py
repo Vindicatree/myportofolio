@@ -3,7 +3,7 @@ from main import api_views
 
 app_name = "api"
 urlpatterns = [
-    path("experiences/", api_views.project_list, name="experience-list"),
+    path("experiences/", api_views.project_list, name="project-list"),
     path("experiences/<uuid:project_id>/", api_views.project_detail, name="project-detail"),
     path("experiences/<uuid:project_id>/star/", api_views.project_star, name="project-star"),
     path("achievements/", api_views.achievement_list, name="achievement-list"),
