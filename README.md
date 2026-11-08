@@ -1,3 +1,67 @@
+# MyPortofolio
+
+## Instalasi dan Menjalankan Proyek
+
+Ikuti langkah berikut untuk menjalankan proyek MyPortofolio secara lokal.
+
+### Prasyarat
+- Git
+- Python yang sesuai dengan versi Django pada proyek
+- `pip`
+
+### 1. Clone repository
+```bash
+git clone https://github.com/Vindicatree/myportofolio.git
+cd myportofolio
+```
+
+### 2. Buat dan aktifkan virtual environment
+
+**macOS/Linux**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**Windows (Command Prompt)**
+```bat
+py -m venv .venv
+.venv\\Scripts\\activate
+```
+
+### 3. Install dependencies
+
+Jika repository menyediakan `requirements.txt`, install dependency dari file tersebut:
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Jika `requirements.txt` tidak tersedia, install Django dan Django REST Framework sesuai versi yang digunakan proyek. Hindari memasang versi terbaru secara sembarang apabila proyek memiliki batasan versi.
+
+### 4. Jalankan migrasi database
+```bash
+python manage.py migrate
+```
+
+### 5. (Opsional) Buat akun administrator
+```bash
+python manage.py createsuperuser
+```
+
+Ikuti prompt untuk mengisi username, email (jika diminta), dan password.
+
+### 6. Jalankan development server
+```bash
+python manage.py runserver
+```
+
+Buka http://127.0.0.1:8000/ di browser. Untuk menghentikan server, tekan `Ctrl+C` di terminal.
+
+> Catatan: `runserver` ditujukan untuk development lokal, bukan deployment production. Dokumentasi instalasi Django menyarankan penggunaan virtual environment dan pemasangan package melalui pip.
+
+---
+
 Nama : Nathanael Orrick Hatmoko
 
 NPM : 2506592125
@@ -93,3 +157,38 @@ Pengerjaan tugas 5 saya menggunakan bantuan AI untuk memandu perbaikan script pa
 2. `await` membuat fungsi `async` berhenti sementara sampai Promise yang dikembalikan `fetch()` selesai, lalu memberikan nilai hasilnya (objek `Response`). Dengan begitu `response.ok` dan `await response.json()` baru dijalankan ketika data benar-benar sudah tersedia, tanpa callback `.then()` bersarang. Tanpa `await`, `fetch()` langsung mengembalikan Promise yang masih *pending*. Pada kode ini `response.ok` bernilai `undefined`, sehingga kondisi `!response.ok` selalu benar dan halaman selalu menampilkan kondisi error walaupun server membalas 200. Kalau `await` pada `response.json()` yang dihilangkan, `experienceData` berupa Promise, `.length` bernilai `undefined`, dan `.forEach` menimbulkan `TypeError`. Selain itu, kegagalan jaringan tidak tertangkap oleh `try/catch` karena Promise ditolak setelah blok `try` selesai, sehingga menjadi *unhandled promise rejection*.
 
 3. **XSS (Cross-Site Scripting)** adalah serangan ketika penyerang menyisipkan kode JavaScript ke halaman web yang kemudian dijalankan di browser pengguna lain. Pada *stored XSS*, kode tersebut disimpan di database (misalnya sebagai judul experience) lalu ikut dieksekusi setiap data itu ditampilkan. Template Django melakukan *auto-escaping* pada `{{ variabel }}`, sehingga karakter seperti `<` diubah menjadi `&lt;` dan tampil sebagai teks biasa. Pada AJAX, data JSON dirakit oleh JavaScript menjadi string HTML lalu dipasang lewat `innerHTML`. Tidak ada lagi Django yang melakukan *escaping*, sehingga browser mem-parsing tag dan atribut di dalam data (misalnya `<img src="x" onerror="...">`) sebagai HTML sungguhan dan menjalankan *event handler*-nya. Karena itu setiap nilai teks dari JSON harus dibungkus `escapeHtml()` (atau dipasang lewat `textContent`), dan input dibersihkan di sisi server dengan `strip_tags` pada `clean_<field>` di `ModelForm`. Dampaknya juga lebih serius karena kode yang disisipkan dapat membaca cookie `csrftoken` dan mengirim request `POST` atas nama korban, sehingga perlindungan CSRF tidak lagi efektif.
+
+### Tugas 6 — Pertanyaan Reflektif
+
+1. **Apa itu REST, mengapa JSON saja belum cukup untuk menyebut API RESTful, dan apa perbedaan PUT dengan PATCH?**
+
+   REST (*Representational State Transfer*) adalah gaya arsitektur untuk sistem berbasis jaringan. REST tidak ditentukan oleh format data yang dikirim saja, melainkan oleh sejumlah batasan arsitektur, seperti pemisahan client dan server, komunikasi stateless, penggunaan cache, uniform interface, serta layered system. Dalam uniform interface, resource diidentifikasi melalui URI dan dimanipulasi melalui representasinya; pesan juga perlu bersifat self-descriptive dan mendukung hypermedia sebagai bagian dari navigasi aplikasi.
+
+   Karena itu, API yang hanya mengembalikan JSON belum otomatis RESTful. JSON adalah format representasi data, sedangkan REST mengatur cara komponen berinteraksi. API perlu dirancang mengikuti batasan REST, bukan sekadar mengubah respons menjadi JSON.
+
+   `PUT` digunakan ketika client mengirim representasi untuk mengganti keadaan resource secara keseluruhan. Contohnya, ketika ingin memperbarui seluruh data sebuah achievement, client mengirim semua field yang diperlukan. Sementara itu, `PATCH` digunakan untuk menerapkan perubahan sebagian pada resource. Contohnya, ketika hanya ingin mengubah `issuer` tanpa mengirim ulang `title`, `description`, atau field lainnya. Dalam implementasi ini, `PATCH` lebih tepat untuk perubahan satu atau beberapa field, sedangkan `PUT` untuk penggantian representasi secara lengkap. (Rujukan: [Fielding, REST Architectural Style](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm), [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html), [RFC 5789](https://www.rfc-editor.org/rfc/rfc5789.html).)
+
+2. **Apa peran serializer di Django REST Framework, dan apa keuntungannya dibandingkan membuat dictionary manual dengan `JsonResponse`?**
+
+   Serializer menjadi perantara antara object model Django dengan format data yang dapat dikirim melalui API. Serializer dapat mengubah QuerySet atau instance model menjadi tipe data Python yang kemudian dirender sebagai JSON. Serializer juga melakukan proses sebaliknya: menerima data dari request, mengubahnya menjadi data yang sesuai dengan model, dan memvalidasi data sebelum disimpan.
+
+   Pada proyek ini, `AchievementsSerializer` menggunakan `ModelSerializer`. Dengan pendekatan tersebut, field yang berasal dari model dapat didefinisikan secara terstruktur, sementara validasi khusus—misalnya membersihkan tag HTML pada field teks—dapat ditambahkan melalui method `validate_<field>`. Serializer juga menyediakan mekanisme `is_valid()` dan `save()`.
+
+   Jika menggunakan dictionary manual dengan `JsonResponse`, developer harus menyusun field respons satu per satu dan membuat validasi input secara terpisah. Cara itu masih bisa digunakan untuk respons sederhana, tetapi akan lebih mudah terjadi pengulangan kode atau ketidaksesuaian antara model dan API. Serializer membuat proses representasi dan validasi lebih konsisten serta lebih mudah dirawat. (Rujukan: [DRF — Serializers](https://www.django-rest-framework.org/api-guide/serializers/).)
+
+3. **Apa perbedaan autentikasi dan otorisasi? Mengapa permission harus diperiksa di server, bukan hanya dengan menyembunyikan tombol pada template?**
+
+   Autentikasi (*authentication*) adalah proses menentukan siapa yang mengirim request, misalnya mengenali user melalui session login. Otorisasi (*authorization*) adalah proses menentukan tindakan apa yang boleh dilakukan oleh user tersebut, misalnya apakah user boleh membuat, mengubah, atau menghapus achievement.
+
+   Dalam Django REST Framework, autentikasi menyediakan identitas request, sedangkan permission class memutuskan apakah request tersebut diizinkan. Permission harus diperiksa di server karena tampilan frontend bukan batas keamanan. Pengunjung masih dapat mengirim request langsung ke endpoint API, meskipun tombol `Edit` atau `Delete` disembunyikan di template. Jika server tidak memeriksa permission, request tersebut tetap berpotensi mengubah data.
+
+   Oleh sebab itu, aturan akses visitor, user, editor, dan superuser diterapkan pada permission class di sisi server. Menyembunyikan tombol hanya membantu pengalaman pengguna; itu tidak menggantikan kontrol akses. (Rujukan: [DRF — Authentication](https://www.django-rest-framework.org/api-guide/authentication/), [DRF — Permissions](https://www.django-rest-framework.org/api-guide/permissions/).)
+
+4. **Mengapa request yang mengubah data tetap membutuhkan CSRF token ketika API memakai SessionAuthentication? Mengapa force_authenticate saja tidak membuktikan CSRF berjalan?**
+
+   `SessionAuthentication` menggunakan session Django yang biasanya disimpan melalui cookie browser. Browser dapat menyertakan cookie session secara otomatis saat mengirim request. Hal ini menimbulkan risiko CSRF: situs lain dapat mencoba membuat browser yang sedang login mengirim request yang tidak diinginkan ke aplikasi. Karena itu, request yang mengubah data seperti `POST`, `PUT`, `PATCH`, dan `DELETE` perlu menyertakan token CSRF yang valid saat menggunakan session authentication.
+
+   `force_authenticate()` pada DRF test tools secara langsung menetapkan user pada request untuk mempermudah pengujian autentikasi dan permission. Mekanisme ini melewati alur autentikasi normal berbasis session, sehingga pengujian yang hanya menggunakan `force_authenticate()` tidak membuktikan bahwa validasi CSRF benar-benar aktif.
+
+   Untuk menguji CSRF, test perlu menjalankan request melalui client dengan pemeriksaan CSRF diaktifkan, misalnya `APIClient(enforce_csrf_checks=True)`, lalu menguji request session-authenticated tanpa token dan dengan token yang valid. Dengan begitu, pengujian memeriksa mekanisme CSRF itu sendiri, bukan hanya status login user. (Rujukan: [DRF — Authentication](https://www.django-rest-framework.org/api-guide/authentication/), [DRF — Testing](https://www.django-rest-framework.org/api-guide/testing/), [Django — CSRF protection](https://docs.djangoproject.com/en/5.2/howto/csrf/).)
+
