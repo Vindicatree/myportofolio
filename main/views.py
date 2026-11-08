@@ -142,6 +142,7 @@ def show_achievements(request):
         "name": "Orrick",
         "title_query": title_query,
         "achievements_list": achievements,
+        "can_edit_achievement": _can_edit_achievement(request.user),
         "form": AchievementsForm(),
         "edit_form": AchievementsForm(auto_id="edit_%s"),
     }
